@@ -2,9 +2,9 @@
 #define INF442_STATISTICS_H
 
 #pragma once
-#include <random>
 #include "graph.h"
 #include "tarjan.h"
+#include <random>
 
 template <class Generator>
 Graph GenerateER(size_t n, double p, Generator& g) {
@@ -12,9 +12,9 @@ Graph GenerateER(size_t n, double p, Generator& g) {
 
   std::uniform_real_distribution<double> distr(0.0, 1.0);
 
-  for(Graph::Vertex vertex1 = 0; vertex1 < n; vertex1++) {
-    for(Graph::Vertex vertex2 = 0; vertex2 < n; vertex2++) {
-      if(distr(g) <= p) {
+  for (Graph::Vertex vertex1 = 0; vertex1 < n; vertex1++) {
+    for (Graph::Vertex vertex2 = 0; vertex2 < n; vertex2++) {
+      if (vertex1 != vertex2 && distr(g) <= p) {
         res.AddEdge(vertex1, vertex2);
       }
     }

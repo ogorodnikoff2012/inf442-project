@@ -1,3 +1,4 @@
+#include "random_graph.h"
 #include "statistics.h"
 
 #include <iostream>

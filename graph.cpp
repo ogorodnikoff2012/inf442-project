@@ -1,6 +1,8 @@
 #include "graph.h"
+#include "progress_bar.h"
 
 #include <cassert>
+#include <iostream>
 #include <sstream>
 
 Graph::Graph(size_t vertices)
@@ -44,7 +46,10 @@ Graph ReadFromEdgeList(std::istream& in) {
     throw std::runtime_error("Failed to read <edge_count>");
   }
 
-  for (size_t i = 0; i < edge_count; ++i) {
+  ProgressBar bar(std::cerr);
+  bar.SetLimit(edge_count);
+
+  for (size_t i = 0; i < edge_count; ++i, bar.IncrementCounter()) {
     size_t from, to;
     if (!(in >> from >> to)) {
       std::stringstream ss;
@@ -64,21 +69,38 @@ Graph ReadFromEdgeList(std::istream& in) {
   return result;
 }
 
-std::vector<Graph::Vertex> TopologicalSort(const Graph& gr) {
+std::vector<Graph::Vertex> TopologicalSort(const Graph& gr,
+                                           bool show_progress) {
   class TopSortVisitor {
    public:
-    explicit TopSortVisitor(std::vector<Graph::Vertex>* result)
-        : result_(result) {}
+    explicit TopSortVisitor(std::vector<Graph::Vertex>* result,
+                            ProgressBar* bar)
+        : result_(result)
+        , bar_(bar) {}
 
-    void OnVertexEnter(Graph::Vertex) {}
+    void OnVertexEnter(Graph::Vertex) {
+      if (bar_) {
+        bar_->IncrementCounter();
+      }
+    }
     void OnVertexExit(Graph::Vertex vertex) { result_->push_back(vertex); }
     void OnEdgeDiscover(Graph::Vertex, Graph::Vertex) {}
 
    private:
     std::vector<Graph::Vertex>* result_;
+    ProgressBar* bar_;
   };
 
+  ProgressBar* bar = nullptr;
+  if (show_progress) {
+    bar = new ProgressBar(std::cerr);
+    bar->SetLimit(gr.VertexCount());
+    bar->Out() << "Topological sort";
+  }
+
   std::vector<Graph::Vertex> result;
-  DFS(gr, TopSortVisitor(&result));
+  DFS(gr, TopSortVisitor(&result, bar));
+  delete bar;
+
   return result;
 }

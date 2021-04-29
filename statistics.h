@@ -2,8 +2,6 @@
 #define INF442_STATISTICS_H
 
 #pragma once
-#include "graph.h"
-#include "tarjan.h"
 
 #include <random>
 
@@ -61,33 +59,5 @@ class Statistic : public CompactStatistic {
   std::vector<double> values_;
   bool is_sorted_{true};
 };
-
-template <class Generator>
-Graph GenerateER(size_t n, double p, Generator& g) {
-  Graph res(n);
-
-  std::uniform_real_distribution<double> distr(0.0, 1.0);
-
-  for (Graph::Vertex vertex1 = 0; vertex1 < n; vertex1++) {
-    for (Graph::Vertex vertex2 = 0; vertex2 < n; vertex2++) {
-      if (vertex1 != vertex2 && distr(g) <= p) {
-        res.AddEdge(vertex1, vertex2);
-      }
-    }
-  }
-
-  return res;
-}
-
-struct Stats {
-  Statistic isolated;
-  // double avg_iso;
-  Statistic scc_count;
-  Statistic scc_largest;
-  // double avg_scc;
-  // unsigned int max_scc;
-} typedef Stats;
-
-Stats EstimateStatsER(size_t n, double p, size_t samples);
 
 #endif // INF442_STATISTICS_H

@@ -43,12 +43,13 @@ ProgressBar::OutputWrapper ProgressBar::Out() {
 
 void ProgressBar::Render() {
   auto now = std::chrono::system_clock::now();
-  // std::chrono::duration<double> diff = now - last_render_time_;
-  // if (diff.count() < 0.01) {
-  //   return;
-  // } else {
-  last_update_time_ = now;
-  // }
+
+  std::chrono::duration<double> diff = now - last_render_time_;
+  if (diff.count() < 0.1) {
+    return;
+  } else {
+    last_render_time_ = now;
+  }
 
   for (size_t i = 0, n = std::strlen(buffer_); i < n; ++i) {
     buffer_[i] = ' ';

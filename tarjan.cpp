@@ -9,12 +9,11 @@ FindConnectedComponentsTarjan(const Graph& gr) {
    public:
     explicit TarjanVisitor(std::vector<Graph::Vertex>* component)
         : component_(component) {}
-    TarjanVisitor(const TarjanVisitor&) = default;
 
     void OnVertexEnter(Graph::Vertex vertex) { component_->push_back(vertex); }
 
-    void OnVertexExit(Graph::Vertex vertex) {}
-    void OnEdgeDiscover(Graph::Vertex from, Graph::Vertex to) {}
+    void OnVertexExit(Graph::Vertex) {}
+    void OnEdgeDiscover(Graph::Vertex, Graph::Vertex) {}
 
    private:
     std::vector<Graph::Vertex>* component_;

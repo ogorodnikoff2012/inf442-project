@@ -1,16 +1,28 @@
 #include "statistics.h"
-#include "util.h"
+
 #include <iostream>
 
+void PrintStatistics(const char* title, Statistic& statistics) {
+  std::cout << title << ":\n";
+  std::cout << "  Average: " << statistics.Mean() << "+-"
+            << std::sqrt(statistics.Variance()) << '\n'
+            << "  Min:     " << statistics.Min() << '\n'
+            << "  Q25:     " << statistics.Quantile(0.25) << '\n'
+            << "  Q50:     " << statistics.Quantile(0.5) << '\n'
+            << "  Q75:     " << statistics.Quantile(0.75) << '\n'
+            << "  Max:     " << statistics.Max() << '\n';
+}
+
 int main() {
-  size_t N     = 1000;
-  double p     = 0.005;
-  int samples  = 10;
-  Stats result = estimateStatsER(N, p, samples);
+  const size_t N       = 1000;
+  const double p       = 0.001;
+  const size_t samples = 100;
   std::cout << "num_of_vertex = " << N << "; p = " << p
             << "; num_of_samples = " << samples << std::endl;
-  std::cout << "num_of_isolated_vertices = " << result.avg_iso
-            << "; num_of_SCC = " << result.avg_scc
-            << "; min_max_SCC = " << result.max_scc;
+
+  Stats result = EstimateStatsER(N, p, samples);
+  PrintStatistics("Number of isolated vertices", result.isolated);
+  PrintStatistics("Number of SCC", result.scc_count);
+  PrintStatistics("Largest SCC", result.scc_largest);
   return 0;
 }

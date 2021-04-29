@@ -6,8 +6,8 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 
 AccessModifierOffset: -1
-AlignConsecutiveAssignments: true
-AlignConsecutiveMacros: true
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveMacros: Consecutive
 
 AlwaysBreakTemplateDeclarations: Yes
 

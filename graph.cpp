@@ -70,8 +70,6 @@ std::vector<Graph::Vertex> TopologicalSort(const Graph& gr) {
     explicit TopSortVisitor(std::vector<Graph::Vertex>* result)
         : result_(result) {}
 
-    TopSortVisitor(const TopSortVisitor&) = default;
-
     void OnVertexEnter(Graph::Vertex) {}
     void OnVertexExit(Graph::Vertex vertex) { result_->push_back(vertex); }
     void OnEdgeDiscover(Graph::Vertex, Graph::Vertex) {}

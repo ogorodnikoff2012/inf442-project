@@ -13,11 +13,11 @@ class Graph {
 
   void AddEdge(Vertex from, Vertex to);
 
-  size_t VertexCount() const;
+  [[nodiscard]] size_t VertexCount() const;
 
-  const std::vector<Vertex>& GetEdges(Vertex vertex) const;
+  [[nodiscard]] const std::vector<Vertex>& GetEdges(Vertex vertex) const;
 
-  Graph Transposed() const;
+  [[nodiscard]] Graph Transposed() const;
 
  private:
   std::vector<std::vector<Vertex>> edges_;

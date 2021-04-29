@@ -7,7 +7,7 @@
 
 #include <fstream>
 
-int main(int argc, char* argv[]) {
+int main() {
   std::ifstream fin("tarjan.in");
   std::ofstream fout("tarjan.out");
 

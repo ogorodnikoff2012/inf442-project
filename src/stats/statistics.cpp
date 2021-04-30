@@ -1,5 +1,5 @@
 #include "statistics.h"
-#include "progress_bar.h"
+#include "../util/progress_bar.h"
 
 #include <algorithm>
 #include <iostream>

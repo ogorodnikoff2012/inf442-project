@@ -1,8 +1,9 @@
 #include "graph.h"
-#include "progress_bar.h"
+#include "../util/progress_bar.h"
 
 #include <cassert>
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 Graph::Graph(size_t vertices)
@@ -74,9 +75,9 @@ std::vector<Graph::Vertex> TopologicalSort(const Graph& gr,
   class TopSortVisitor {
    public:
     explicit TopSortVisitor(std::vector<Graph::Vertex>* result,
-                            ProgressBar* bar)
+                            std::shared_ptr<ProgressBar> bar)
         : result_(result)
-        , bar_(bar) {}
+        , bar_(std::move(bar)) {}
 
     void OnVertexEnter(Graph::Vertex) {
       if (bar_) {
@@ -88,19 +89,18 @@ std::vector<Graph::Vertex> TopologicalSort(const Graph& gr,
 
    private:
     std::vector<Graph::Vertex>* result_;
-    ProgressBar* bar_;
+    std::shared_ptr<ProgressBar> bar_;
   };
 
-  ProgressBar* bar = nullptr;
+  std::shared_ptr<ProgressBar> bar{nullptr};
   if (show_progress) {
-    bar = new ProgressBar(std::cerr);
+    bar.reset(new ProgressBar(std::cerr));
     bar->SetLimit(gr.VertexCount());
     bar->Out() << "Topological sort";
   }
 
   std::vector<Graph::Vertex> result;
   DFS(gr, TopSortVisitor(&result, bar));
-  delete bar;
 
   return result;
 }

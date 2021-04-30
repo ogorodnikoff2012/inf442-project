@@ -1,5 +1,5 @@
 #include "random_graph.h"
-#include "progress_bar.h"
+#include "../util/progress_bar.h"
 #include "tarjan.h"
 
 #include <iostream>

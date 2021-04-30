@@ -1,5 +1,5 @@
-#include "random_graph.h"
-#include "statistics.h"
+#include "../graph/random_graph.h"
+#include "../stats/statistics.h"
 
 #include <iostream>
 

@@ -1,7 +1,7 @@
 #ifndef INF442_GRAPH_H
 #define INF442_GRAPH_H
 
-#include "progress_bar.h"
+#include "../util/progress_bar.h"
 
 #include <istream>
 #include <stack>

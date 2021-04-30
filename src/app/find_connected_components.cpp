@@ -2,9 +2,9 @@
 // Created by Manas Uteshev on 4/28/2021.
 //
 
-#include "progress_bar.h"
-#include "tarjan.h"
-#include "util.h"
+#include "../graph/tarjan.h"
+#include "../util/progress_bar.h"
+#include "../util/util.h"
 
 #include <fstream>
 

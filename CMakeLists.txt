@@ -12,20 +12,25 @@ endif ()
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter")
 
-set(COMMON_SOURCE
-        graph.cpp
-        graph.h
-        progress_bar.cpp
-        progress_bar.h
-        random_graph.cpp
-        random_graph.h
-        statistics.cpp
-        statistics.h
-        tarjan.cpp
-        tarjan.h
-        util.h
+include_directories(src)
+
+set(LIBRARY_SOURCE
+        src/graph/graph.cpp
+        src/graph/graph.h
+        src/util/progress_bar.cpp
+        src/util/progress_bar.h
+        src/graph/random_graph.cpp
+        src/graph/random_graph.h
+        src/stats/statistics.cpp
+        src/stats/statistics.h
+        src/graph/tarjan.cpp
+        src/graph/tarjan.h
+        src/util/util.h
         )
 
-add_executable(components_tarjan test_tarjan.cpp ${COMMON_SOURCE})
-add_executable(statistics test_statistics.cpp ${COMMON_SOURCE})
-add_executable(test_progress_bar test_progress_bar.cpp ${COMMON_SOURCE})
+add_library(common STATIC ${LIBRARY_SOURCE})
+
+foreach (app find_connected_components random_graph_statistics demo_progress_bar)
+    add_executable(${app} src/app/${app}.cpp)
+    target_link_libraries(${app} PUBLIC common)
+endforeach ()

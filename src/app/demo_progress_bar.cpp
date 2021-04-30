@@ -2,7 +2,7 @@
 // Created by xenon on 29.04.2021.
 //
 
-#include "progress_bar.h"
+#include "../util/progress_bar.h"
 
 #include <chrono>
 #include <iostream>

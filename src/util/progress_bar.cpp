@@ -8,7 +8,7 @@
 
 ProgressBar::ProgressBar(std::ostream& out)
     : last_update_time_(std::chrono::system_clock::now())
-    , average_duration_(2, 5)
+    , average_duration_(2, 50)
     , out_{out} {
   std::fill_n(buffer_, sizeof(buffer_), '\0');
   Render();
@@ -45,11 +45,12 @@ void ProgressBar::Render() {
   auto now = std::chrono::system_clock::now();
 
   std::chrono::duration<double> diff = now - last_render_time_;
-  if (diff.count() < 0.1) {
+  if (diff.count() < 0.1 && !force_update_) {
     return;
   } else {
     last_render_time_ = now;
   }
+  force_update_ = false;
 
   for (size_t i = 0, n = std::strlen(buffer_); i < n; ++i) {
     buffer_[i] = ' ';
@@ -124,7 +125,11 @@ void ProgressBar::UpdateDuration() {
   average_duration_.Add(diff.count());
 }
 
-ProgressBar::~ProgressBar() { out_ << '\n'; }
+ProgressBar::~ProgressBar() {
+  force_update_ = true;
+  Render();
+  out_ << '\n';
+}
 
 ProgressBar::OutputWrapper::OutputWrapper(std::ostream& out,
                                           std::string_view replacement)

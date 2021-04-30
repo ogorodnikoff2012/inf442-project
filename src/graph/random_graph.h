@@ -1,8 +1,8 @@
 #ifndef INF442_RANDOM_GRAPH_H
 #define INF442_RANDOM_GRAPH_H
 
+#include "../stats/statistics.h"
 #include "graph.h"
-#include "statistics.h"
 
 template <class Generator>
 Graph GenerateER(size_t n, double p, Generator& g) {

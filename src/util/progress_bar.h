@@ -5,7 +5,7 @@
 #ifndef INF442_PROGRESS_BAR_H
 #define INF442_PROGRESS_BAR_H
 
-#include "statistics.h"
+#include "../stats/statistics.h"
 
 #include <chrono>
 #include <ostream>
@@ -46,6 +46,7 @@ class ProgressBar {
   std::chrono::time_point<std::chrono::system_clock> last_render_time_{};
   ExponentialMovingAverage average_duration_;
   std::ostream& out_;
+  bool force_update_{false};
 
   void Render();
   void ResetDuration();

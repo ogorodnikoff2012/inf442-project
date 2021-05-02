@@ -14,6 +14,8 @@ class ExponentialMovingAverage {
   [[nodiscard]] double GetFactor() const;
   void Reset();
   [[nodiscard]] bool IsEmpty() const;
+  void SetFactor(double factor);
+  void SetFactor(double smoothing, size_t width);
 
  private:
   double factor_;

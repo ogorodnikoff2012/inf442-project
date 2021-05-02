@@ -4,6 +4,7 @@
 
 #include "progress_bar.h"
 
+#include <cinttypes>
 #include <cstring>
 
 ProgressBar::ProgressBar(std::ostream& out)
@@ -17,6 +18,7 @@ ProgressBar::ProgressBar(std::ostream& out)
 void ProgressBar::SetLimit(size_t limit) {
   limit_ = limit;
   ResetDuration();
+  average_duration_.SetFactor(2, 0.01 * limit + std::sqrt(limit) + 1);
   Render();
 }
 
@@ -79,8 +81,8 @@ void ProgressBar::Render() {
   }
   *buf_begin++ = ']';
 
-  buf_begin += std::snprintf(buf_begin, buf_end - buf_begin, " (%lu/%lu)",
-                             counter_, limit_);
+  buf_begin += std::snprintf(buf_begin, buf_end - buf_begin,
+                             " (%" PRIuPTR "/%" PRIuPTR ")", counter_, limit_);
 
   if (!average_duration_.IsEmpty()) {
     const double avg_dur = average_duration_.Mean();
@@ -100,8 +102,9 @@ void ProgressBar::Render() {
     const size_t eta_hh = eta / 3'600'000;
 
     /*buf_begin += */ std::snprintf(buf_begin, buf_end - buf_begin,
-                                    " ETA %02lu:%02lu:%02lu"
-                                    /* ".%03lu" */
+                                    " ETA %02" PRIuPTR ":%02" PRIuPTR
+                                    ":%02" PRIuPTR
+                                    /* ".%03" PRIuPTR */
                                     ,
                                     eta_hh, eta_mm, eta_ss
                                     /*, eta_ms */);
@@ -129,6 +132,10 @@ ProgressBar::~ProgressBar() {
   force_update_ = true;
   Render();
   out_ << '\n';
+}
+void ProgressBar::ForceUpdate() {
+  force_update_ = true;
+  Render();
 }
 
 ProgressBar::OutputWrapper::OutputWrapper(std::ostream& out,

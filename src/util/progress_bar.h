@@ -35,6 +35,7 @@ class ProgressBar {
   void SetCounter(size_t counter);
   void IncrementCounter();
   void ResetCounter();
+  void ForceUpdate();
 
   OutputWrapper Out();
 

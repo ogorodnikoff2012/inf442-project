@@ -4,3 +4,5 @@
 *.out
 .vscode/
 datasets/*.txt
+datasets/*.lbl
+*/__pycache__/*

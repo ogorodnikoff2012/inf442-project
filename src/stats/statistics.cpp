@@ -100,3 +100,9 @@ void ExponentialMovingAverage::Reset() {
 }
 
 bool ExponentialMovingAverage::IsEmpty() const { return empty_; }
+
+void ExponentialMovingAverage::SetFactor(double factor) { factor_ = factor; }
+
+void ExponentialMovingAverage::SetFactor(double smoothing, size_t width) {
+  SetFactor(smoothing / (width + 1));
+}

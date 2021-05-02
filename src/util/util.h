@@ -12,20 +12,28 @@
 
 template <class T>
 std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec) {
-  const char* prefix = "[";
+  out << '[';
+  bool first = true;
   for (const auto& element : vec) {
-    out << prefix << element;
-    prefix = ", ";
+    if (!first) {
+      out << ", ";
+    }
+    first = false;
+    out << element;
   }
   return out << ']';
 }
 
 template <class Key, class Value>
 std::ostream& operator<<(std::ostream& out, const std::map<Key, Value>& dict) {
-  const char* prefix = "{";
+  out << '{';
+  bool first = true;
   for (const auto& [key, value] : dict) {
-    out << prefix << key << ": " << value;
-    prefix = ", ";
+    if (!first) {
+      out << ", ";
+    }
+    first = false;
+    out << key << ": " << value;
   }
   return out << '}';
 }
@@ -33,10 +41,14 @@ std::ostream& operator<<(std::ostream& out, const std::map<Key, Value>& dict) {
 template <class Key, class Value>
 std::ostream& operator<<(std::ostream& out,
                          const std::unordered_map<Key, Value>& dict) {
-  const char* prefix = "{";
+  out << '{';
+  bool first = true;
   for (const auto& [key, value] : dict) {
-    out << prefix << key << ": " << value;
-    prefix = ", ";
+    if (!first) {
+      out << ", ";
+    }
+    first = false;
+    out << key << ": " << value;
   }
   return out << '}';
 }

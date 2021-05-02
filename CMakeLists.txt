@@ -26,11 +26,16 @@ set(LIBRARY_SOURCE
         src/graph/tarjan.cpp
         src/graph/tarjan.h
         src/util/util.h
+        src/geometry/point.h
+        src/geometry/bounding_box.h
+        src/geometry/sphere.h
+        src/geometry/kd_tree.h
+        src/geometry/dbscan.h
         )
 
 add_library(common STATIC ${LIBRARY_SOURCE})
 
-foreach (app find_connected_components random_graph_statistics demo_progress_bar)
+foreach (app find_connected_components random_graph_statistics demo_progress_bar demo_point dbscan)
     add_executable(${app} src/app/${app}.cpp)
     target_link_libraries(${app} PUBLIC common)
 endforeach ()

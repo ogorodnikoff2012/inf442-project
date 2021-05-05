@@ -45,8 +45,8 @@ std::ostream& operator<<(std::ostream& out, const Point<T, N>& pt) {
 }
 
 int main(int argc, char* argv[]) {
-  if (argc < 3 || argc > 4) {
-    std::cerr << "Usage: " << argv[0] << " min_points eps [input_file]\n";
+  if (argc < 3 || argc > 5) {
+    std::cerr << "Usage: " << argv[0] << " min_points eps [input_file [output_file]]\n";
     return 1;
   }
 
@@ -55,6 +55,9 @@ int main(int argc, char* argv[]) {
 
   if (argc >= 4) {
     std::freopen(argv[3], "r", stdin);
+    if (argc >= 5) {
+      std::freopen(argv[4], "w", stdout);
+    }
   }
 
   std::cerr << "Reading\n";

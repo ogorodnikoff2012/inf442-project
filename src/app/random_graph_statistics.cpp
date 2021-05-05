@@ -16,7 +16,7 @@ void PrintStatistics(const char* title, Statistic& statistics) {
 
 int main() {
   const size_t N       = 1000;
-  const double p       = 0.001;
+  const double p       = 0.002;
   const size_t samples = 100;
   std::cout << "num_of_vertex = " << N << "; p = " << p
             << "; num_of_samples = " << samples << std::endl;

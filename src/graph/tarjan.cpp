@@ -5,12 +5,14 @@
 #include <fstream>
 #include <memory>
 
+namespace graph {
+
 std::vector<std::vector<Graph::Vertex>>
 FindConnectedComponentsTarjan(const Graph& gr, bool show_progress) {
   class TarjanVisitor {
    public:
     explicit TarjanVisitor(std::vector<Graph::Vertex>* component,
-                           std::shared_ptr<ProgressBar> bar)
+                           std::shared_ptr<util::ProgressBar> bar)
         : component_(component)
         , bar_(std::move(bar)) {}
 
@@ -26,7 +28,7 @@ FindConnectedComponentsTarjan(const Graph& gr, bool show_progress) {
 
    private:
     std::vector<Graph::Vertex>* component_;
-    std::shared_ptr<ProgressBar> bar_;
+    std::shared_ptr<util::ProgressBar> bar_;
   };
 
   auto vertices = TopologicalSort(gr, show_progress);
@@ -35,9 +37,9 @@ FindConnectedComponentsTarjan(const Graph& gr, bool show_progress) {
   }
   auto transposed = gr.Transposed();
 
-  std::shared_ptr<ProgressBar> bar{nullptr};
+  std::shared_ptr<util::ProgressBar> bar{nullptr};
   if (show_progress) {
-    bar.reset(new ProgressBar(std::cerr));
+    bar.reset(new util::ProgressBar(std::cerr));
     bar->SetLimit(gr.VertexCount());
     bar->Out() << "Find components";
   }
@@ -56,3 +58,5 @@ FindConnectedComponentsTarjan(const Graph& gr, bool show_progress) {
 
   return components;
 }
+
+} // namespace graph

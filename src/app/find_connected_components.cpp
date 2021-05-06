@@ -18,15 +18,15 @@ int main(int argc, char* argv[]) {
   std::ofstream fout(argv[2]);
 
   std::cerr << "Reading\n";
-  Graph gr = ReadFromEdgeList(fin);
+  graph::Graph gr = graph::ReadFromEdgeList(fin);
   std::cerr << "Reading done\nProcessing\n";
   fin.close();
 
-  auto components = FindConnectedComponentsTarjan(gr, true);
+  auto components = graph::FindConnectedComponentsTarjan(gr, true);
   std::cerr << "Processing done\nSaving\n";
 
   {
-    ProgressBar bar(std::cerr);
+    util::ProgressBar bar(std::cerr);
     bar.SetLimit(components.size() + 1);
 
     fout << "# Components:\ncomponents = [\n";

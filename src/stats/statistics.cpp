@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iostream>
 
+namespace stats {
+
 CompactStatistic::CompactStatistic(const std::vector<double>& values) {
   for (double val : values) {
     CompactStatistic::Add(val);
@@ -106,3 +108,5 @@ void ExponentialMovingAverage::SetFactor(double factor) { factor_ = factor; }
 void ExponentialMovingAverage::SetFactor(double smoothing, size_t width) {
   SetFactor(smoothing / (width + 1));
 }
+
+} // namespace stats

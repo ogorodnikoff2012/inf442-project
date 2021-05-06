@@ -4,12 +4,14 @@
 
 #include <iostream>
 
+namespace graph {
+
 Stats EstimateStatsER(size_t n, double p, size_t samples) {
 
   std::random_device rd;
   std::default_random_engine generator(rd());
 
-  ProgressBar bar(std::cerr);
+  util::ProgressBar bar(std::cerr);
   bar.SetLimit(samples);
 
   Stats results{};
@@ -48,3 +50,5 @@ Stats EstimateStatsER(size_t n, double p, size_t samples) {
 
   return results;
 }
+
+} // namespace graph

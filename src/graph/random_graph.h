@@ -4,6 +4,8 @@
 #include "../stats/statistics.h"
 #include "graph.h"
 
+namespace graph {
+
 template <class Generator>
 Graph GenerateER(size_t n, double p, Generator& g) {
   Graph res(n);
@@ -22,14 +24,16 @@ Graph GenerateER(size_t n, double p, Generator& g) {
 }
 
 struct Stats {
-  Statistic isolated;
+  stats::Statistic isolated;
   // double avg_iso;
-  Statistic scc_count;
-  Statistic scc_largest;
+  stats::Statistic scc_count;
+  stats::Statistic scc_largest;
   // double avg_scc;
   // unsigned int max_scc;
 } typedef Stats;
 
 Stats EstimateStatsER(size_t n, double p, size_t samples);
+
+} // namespace graph
 
 #endif // INF442_RANDOM_GRAPH_H

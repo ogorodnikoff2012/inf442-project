@@ -2,7 +2,7 @@
 // Created by xenon on 02.05.2021.
 //
 
-#include "../geometry/dbscan.h"
+#include "../geometry_v2/dbscan.h"
 #include "../util/progress_bar.h"
 #include "../util/util.h"
 
@@ -10,43 +10,66 @@
 #include <iostream>
 #include <sstream>
 
-template <class T, size_t N>
-std::vector<Point<T, N>> ReadPoints(std::istream& in) {
-  size_t cnt = 0;
-  if (!(in >> cnt)) {
-    throw std::runtime_error("Cannot read cnt");
-  }
+template <class T>
+std::vector<T> Tokenize(const std::string& line) {
+  std::vector<T> result;
+  std::istringstream ss(line);
+  T object;
 
-  ProgressBar bar(std::cerr);
-  bar.SetLimit(cnt);
-
-  std::vector<Point<T, N>> result(cnt);
-  for (size_t i = 0; i < cnt; ++i, bar.IncrementCounter()) {
-    for (size_t j = 0; j < N; ++j) {
-      if (!(in >> result[i][j])) {
-        std::stringstream ss;
-        ss << "Cannot read coordinate " << j << " of point " << i;
-        throw std::runtime_error(ss.str());
-      }
-    }
+  while ((ss >> object)) {
+    result.push_back(object);
   }
 
   return result;
 }
 
-template <class T, size_t N>
-std::ostream& operator<<(std::ostream& out, const Point<T, N>& pt) {
-  const char* prefix = "(";
-  for (size_t i = 0; i < N; ++i) {
-    out << prefix << pt[i];
-    prefix = ", ";
+template <class T>
+std::vector<geometry_v2::Point<T>> ReadPoints(std::istream& in) {
+  size_t cnt = 0;
+  if (!(in >> cnt)) {
+    throw std::runtime_error("Cannot read cnt");
+  }
+
+  util::ProgressBar bar(std::cerr);
+  bar.SetLimit(cnt);
+
+  std::vector<geometry_v2::Point<T>> result;
+  result.reserve(cnt);
+
+  std::string buffer;
+  std::getline(in, buffer);
+
+  for (size_t i = 0; i < cnt; ++i, bar.IncrementCounter()) {
+    std::getline(in, buffer);
+    std::vector<T> values = Tokenize<T>(buffer);
+    result.emplace_back(std::move(values));
+  }
+
+  return result;
+}
+
+namespace geometry_v2 {
+
+template <class T>
+std::ostream& operator<<(std::ostream& out, const geometry_v2::Point<T>& pt) {
+  out << '(';
+  bool first = true;
+  for (size_t i = 0; i < pt.Dimensionality(); ++i) {
+    if (!first) {
+      out << ", ";
+    }
+    first = false;
+    out << pt[i];
   }
   return out << ')';
 }
 
+} // namespace geometry_v2
+
 int main(int argc, char* argv[]) {
   if (argc < 3 || argc > 5) {
-    std::cerr << "Usage: " << argv[0] << " min_points eps [input_file [output_file]]\n";
+    std::cerr << "Usage: " << argv[0]
+              << " min_points eps [input_file [output_file]]\n";
     return 1;
   }
 
@@ -61,9 +84,9 @@ int main(int argc, char* argv[]) {
   }
 
   std::cerr << "Reading\n";
-  auto points = ReadPoints<double, 2>(std::cin);
+  auto points = ReadPoints<double>(std::cin);
   std::cerr << "Running DBSCAN\n";
-  DBSCAN dbscan(points, min_points, eps, true);
+  geometry_v2::DBSCAN dbscan(points, min_points, eps, true);
   std::cerr << "Done\n";
 
   const auto& clusters = dbscan.Clusters();

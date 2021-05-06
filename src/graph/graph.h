@@ -8,6 +8,8 @@
 #include <unordered_set>
 #include <vector>
 
+namespace graph {
+
 class Graph {
  public:
   using Vertex = size_t;
@@ -108,5 +110,7 @@ void DFS(const Graph& gr, Visitor visitor) {
 
 std::vector<Graph::Vertex> TopologicalSort(const Graph& gr,
                                            bool show_progress = false);
+
+} // namespace graph
 
 #endif // INF442_GRAPH_H

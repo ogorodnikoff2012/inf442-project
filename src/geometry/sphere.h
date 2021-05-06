@@ -8,6 +8,8 @@
 #include "bounding_box.h"
 #include "point.h"
 
+namespace geometry {
+
 template <class T, size_t N>
 class Sphere {
  public:
@@ -43,5 +45,7 @@ class Sphere {
   T radius_;
   T radius_sqr_;
 };
+
+} // namespace geometry
 
 #endif // INF442_SPHERE_H

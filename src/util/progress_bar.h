@@ -10,6 +10,8 @@
 #include <chrono>
 #include <ostream>
 
+namespace util {
+
 class ProgressBar {
  private:
   class OutputWrapper {
@@ -45,7 +47,7 @@ class ProgressBar {
   size_t counter_{0};
   std::chrono::time_point<std::chrono::system_clock> last_update_time_;
   std::chrono::time_point<std::chrono::system_clock> last_render_time_{};
-  ExponentialMovingAverage average_duration_;
+  stats::ExponentialMovingAverage average_duration_;
   std::ostream& out_;
   bool force_update_{false};
 
@@ -53,5 +55,7 @@ class ProgressBar {
   void ResetDuration();
   void UpdateDuration();
 };
+
+} // namespace util
 
 #endif // INF442_PROGRESS_BAR_H

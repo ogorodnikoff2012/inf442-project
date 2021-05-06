@@ -14,36 +14,42 @@
 #include <stdexcept>
 #include <vector>
 
-namespace geometry {
+namespace geometry_v2 {
 
-template <class T, size_t N>
+template <class T>
 class KDTree {
  public:
-  using ValueType                         = T;
-  static constexpr size_t kDimensionality = N;
-  using Point                             = Point<T, N>;
+  using ValueType = T;
 
   template <class Iterator>
   KDTree(Iterator begin, Iterator end)
-      : points_(begin, end) {
+      : points_(begin, end)
+      , dimensionality_(points_.empty() ? 0
+                                        : points_.front().Dimensionality()) {
+    for (size_t i = 1; i < points_.size(); ++i) {
+      CheckDimensionality(*this, points_[i]);
+    }
+
     indices_.resize(points_.size());
     std::iota(indices_.begin(), indices_.end(), 0);
     BuildTree();
   }
 
+  size_t Dimensionality() const { return dimensionality_; }
+
   template <class Shape>
   std::vector<size_t> IndicesIn(const Shape& shape) const {
     std::vector<size_t> result;
-    ForEachIn(shape, [&](const Point& point, size_t index) {
+    ForEachIn(shape, [&](const Point<T>& point, size_t index) {
       result.push_back(index);
     });
     return result;
   }
 
   template <class Shape>
-  std::vector<Point> PointsIn(const Shape& shape) const {
-    std::vector<Point> result;
-    ForEachIn(shape, [&](const Point& point, size_t index) {
+  std::vector<Point<T>> PointsIn(const Shape& shape) const {
+    std::vector<Point<T>> result;
+    ForEachIn(shape, [&](const Point<T>& point, size_t index) {
       result.push_back(point);
     });
     return result;
@@ -51,7 +57,7 @@ class KDTree {
 
   template <class Shape, class Callback>
   void ForEachIn(const Shape& shape, Callback callback) const {
-    ForEachIn(shape.GetBoundingBox(), [&](const Point& point, size_t index) {
+    ForEachIn(shape.GetBoundingBox(), [&](const Point<T>& point, size_t index) {
       if (shape.Contains(point)) {
         callback(point, index);
       }
@@ -59,14 +65,17 @@ class KDTree {
   }
 
   template <class Callback>
-  void ForEachIn(const BoundingBox<T, N>& box, Callback callback) const {
+  void ForEachIn(const BoundingBox<T>& box, Callback callback) const {
+    CheckDimensionality(*this, box);
     ForEachInHelper(root_, box, callback);
   }
 
-  const Point& NearestPoint(const Point& pt, size_t* index = nullptr) const {
+  const Point<T>& NearestPoint(const Point<T>& pt,
+                               size_t* index = nullptr) const {
     if (!root_) {
       throw std::runtime_error("Tree is empty");
     }
+    CheckDimensionality(*this, pt);
 
     size_t best_index = GetIndex(root_);
     T best_dist_sqr   = pt.DistanceSqr(points_[best_index]);
@@ -78,7 +87,7 @@ class KDTree {
     return points_[best_index];
   }
 
-  const std::vector<Point>& Points() const { return points_; }
+  const std::vector<Point<T>>& Points() const { return points_; }
 
  private:
   using IndexIterator = std::vector<size_t>::iterator;
@@ -91,11 +100,11 @@ class KDTree {
     std::unique_ptr<Node> left;
     std::unique_ptr<Node> right;
 
-    BoundingBox<T, N> bounding_box;
+    BoundingBox<T> bounding_box;
 
     Node(size_t dimension, IndexIterator index_begin, IndexIterator index_end,
          std::unique_ptr<Node>&& left, std::unique_ptr<Node>&& right,
-         const BoundingBox<T, N>& box)
+         const BoundingBox<T>& box)
         : dimension(dimension)
         , index_begin(index_begin)
         , index_end(index_end)
@@ -104,9 +113,10 @@ class KDTree {
         , bounding_box(box) {}
   };
 
-  std::vector<Point> points_;
+  std::vector<Point<T>> points_;
   std::vector<size_t> indices_;
   std::unique_ptr<Node> root_{nullptr};
+  const size_t dimensionality_;
 
   void BuildTree() {
     root_ = BuildTreeHelper(indices_.begin(), indices_.end(), 0);
@@ -120,7 +130,7 @@ class KDTree {
     return *Middle(node->index_begin, node->index_end);
   }
 
-  void NearestPointHelper(const std::unique_ptr<Node>& node, const Point& pt,
+  void NearestPointHelper(const std::unique_ptr<Node>& node, const Point<T>& pt,
                           size_t* best_index, T* best_dist_sqr) const {
     if (!node) {
       return;
@@ -160,11 +170,11 @@ class KDTree {
       return points_[lhs][dimension] < points_[rhs][dimension];
     });
 
-    size_t next_dimension = (dimension + 1) % N;
+    size_t next_dimension = (dimension + 1) % Dimensionality();
     auto left             = BuildTreeHelper(begin, middle, next_dimension);
     auto right            = BuildTreeHelper(middle + 1, end, next_dimension);
 
-    BoundingBox<T, N> box(points_[*middle]);
+    BoundingBox<T> box(points_[*middle]);
     if (left) {
       box.Extend(left->bounding_box);
     }
@@ -178,7 +188,7 @@ class KDTree {
 
   template <class Callback>
   void ForEachInHelper(const std::unique_ptr<Node>& node,
-                       const BoundingBox<T, N>& box, Callback callback) const {
+                       const BoundingBox<T>& box, Callback callback) const {
     if (!node) {
       return;
     }
@@ -197,6 +207,6 @@ class KDTree {
   }
 };
 
-} // namespace geometry
+} // namespace geometry_v2
 
 #endif // INF442_KD_TREE_H

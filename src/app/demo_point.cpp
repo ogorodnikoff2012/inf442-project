@@ -10,8 +10,8 @@
 #include <iostream>
 #include <vector>
 
-using Point2D = Point<double, 2>;
-using Point2I = Point<int, 2>;
+using Point2D = geometry::Point<double, 2>;
+using Point2I = geometry::Point<int, 2>;
 
 void PrintPoint(const Point2D& point) {
   std::cout << point.X() << " " << point.Y() << std::endl;
@@ -37,11 +37,11 @@ int main() {
                               {3., 3.},
                               {1., 2.},
                               {2 - std::sqrt(2), 2 - std::sqrt(2)}};
-  KDTree<double, 2> tree(points.begin(), points.end());
+  geometry::KDTree<double, 2> tree(points.begin(), points.end());
 
   for (double radius : {1., std::sqrt(2), 2. + 1e-6}) {
     std::cout << "Sphere with center=(2, 2), radius=" << radius << std::endl;
-    tree.ForEachIn(Sphere{Point2D{2., 2.}, radius},
+    tree.ForEachIn(geometry::Sphere{Point2D{2., 2.}, radius},
                    [](const auto& point, size_t index) { PrintPoint(point); });
   }
 

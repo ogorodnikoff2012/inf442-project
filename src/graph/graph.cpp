@@ -6,6 +6,8 @@
 #include <memory>
 #include <sstream>
 
+namespace graph {
+
 Graph::Graph(size_t vertices)
     : edges_(vertices) {}
 
@@ -47,7 +49,7 @@ Graph ReadFromEdgeList(std::istream& in) {
     throw std::runtime_error("Failed to read <edge_count>");
   }
 
-  ProgressBar bar(std::cerr);
+  util::ProgressBar bar(std::cerr);
   bar.SetLimit(edge_count);
 
   for (size_t i = 0; i < edge_count; ++i, bar.IncrementCounter()) {
@@ -75,7 +77,7 @@ std::vector<Graph::Vertex> TopologicalSort(const Graph& gr,
   class TopSortVisitor {
    public:
     explicit TopSortVisitor(std::vector<Graph::Vertex>* result,
-                            std::shared_ptr<ProgressBar> bar)
+                            std::shared_ptr<util::ProgressBar> bar)
         : result_(result)
         , bar_(std::move(bar)) {}
 
@@ -89,12 +91,12 @@ std::vector<Graph::Vertex> TopologicalSort(const Graph& gr,
 
    private:
     std::vector<Graph::Vertex>* result_;
-    std::shared_ptr<ProgressBar> bar_;
+    std::shared_ptr<util::ProgressBar> bar_;
   };
 
-  std::shared_ptr<ProgressBar> bar{nullptr};
+  std::shared_ptr<util::ProgressBar> bar{nullptr};
   if (show_progress) {
-    bar.reset(new ProgressBar(std::cerr));
+    bar.reset(new util::ProgressBar(std::cerr));
     bar->SetLimit(gr.VertexCount());
     bar->Out() << "Topological sort";
   }
@@ -104,3 +106,5 @@ std::vector<Graph::Vertex> TopologicalSort(const Graph& gr,
 
   return result;
 }
+
+} // namespace graph

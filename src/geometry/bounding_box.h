@@ -10,6 +10,8 @@
 #include <cstddef>
 #include <limits>
 
+namespace geometry {
+
 template <class T, size_t N>
 class BoundingBox {
  public:
@@ -100,5 +102,7 @@ class BoundingBox {
   Point<T, N> lower_;
   Point<T, N> upper_;
 };
+
+} // namespace geometry
 
 #endif // INF442_BOUNDING_BOX_H

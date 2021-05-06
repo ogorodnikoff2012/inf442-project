@@ -5,6 +5,8 @@
 
 #include <random>
 
+namespace stats {
+
 class ExponentialMovingAverage {
  public:
   explicit ExponentialMovingAverage(double factor);
@@ -61,5 +63,7 @@ class Statistic : public CompactStatistic {
   std::vector<double> values_;
   bool is_sorted_{true};
 };
+
+} // namespace stats
 
 #endif // INF442_STATISTICS_H

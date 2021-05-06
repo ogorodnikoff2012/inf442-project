@@ -9,6 +9,8 @@
 #include <cstddef>
 #include <type_traits>
 
+namespace geometry {
+
 template <class T, size_t N>
 class Point {
  public:
@@ -90,5 +92,7 @@ class Point {
  private:
   std::array<T, N> data_{};
 };
+
+} // namespace geometry
 
 #endif // INF442_POINT_H

@@ -14,16 +14,14 @@
 #include <iostream>
 #include <unordered_set>
 
-namespace geometry {
+namespace geometry_v2 {
 
-template <class T, size_t N>
+template <class T>
 class DBSCAN {
  public:
-  using ValueType                         = T;
-  static constexpr size_t kDimensionality = N;
-  using Point                             = Point<T, N>;
+  using ValueType = T;
 
-  explicit DBSCAN(const std::vector<Point>& points, size_t min_points,
+  explicit DBSCAN(const std::vector<Point<T>>& points, size_t min_points,
                   const T& eps, bool show_progress = false)
       : tree_(points.begin(), points.end())
       , min_points_(min_points)
@@ -32,12 +30,14 @@ class DBSCAN {
     Fit(points, show_progress);
   }
 
+  size_t Dimensionality() const { return tree_->Dimensionality(); }
+
   const std::vector<int>& PointToCluster() const { return point_to_cluster_; }
   const std::vector<std::vector<size_t>>& Clusters() const { return clusters_; }
   const std::vector<size_t>& Outliers() const { return outliers_; }
 
-  std::vector<std::vector<Point>> ClustersAsPoints() const {
-    std::vector<std::vector<Point>> result(clusters_.size());
+  std::vector<std::vector<Point<T>>> ClustersAsPoints() const {
+    std::vector<std::vector<Point<T>>> result(clusters_.size());
 
     for (size_t i = 0; i < clusters_.size(); ++i) {
       result[i].resize(clusters_[i].size());
@@ -49,8 +49,8 @@ class DBSCAN {
     return result;
   }
 
-  std::vector<Point> OutliersAsPoints() const {
-    std::vector<Point> result(outliers_.size());
+  std::vector<Point<T>> OutliersAsPoints() const {
+    std::vector<Point<T>> result(outliers_.size());
 
     for (size_t i = 0; i < outliers_.size(); ++i) {
       result[i] = tree_.Points()[outliers_[i]];
@@ -63,7 +63,7 @@ class DBSCAN {
   static constexpr int kLabelUndefined = -2;
   static constexpr int kLabelOutlier   = -1;
 
-  const KDTree<T, N> tree_;
+  const KDTree<T> tree_;
   const size_t min_points_;
   const T eps_;
 
@@ -88,7 +88,7 @@ class DBSCAN {
     }
   }
 
-  void Fit(const std::vector<Point>& points, bool show_progress) {
+  void Fit(const std::vector<Point<T>>& points, bool show_progress) {
     int cluster_counter = 0;
 
     std::unique_ptr<util::ProgressBar> bar{nullptr};
@@ -103,7 +103,7 @@ class DBSCAN {
         continue;
       }
 
-      auto neighbours = tree_.IndicesIn(Sphere<T, N>(points[i], eps_));
+      auto neighbours = tree_.IndicesIn(Sphere<T>(points[i], eps_));
       if (neighbours.size() < min_points_) {
         point_to_cluster_[i] = kLabelOutlier;
         TryIncrement(bar);
@@ -133,8 +133,7 @@ class DBSCAN {
         point_to_cluster_[index] = cluster_id;
         TryIncrement(bar);
 
-        auto next_neighbours =
-            tree_.IndicesIn(Sphere<T, N>(points[index], eps_));
+        auto next_neighbours = tree_.IndicesIn(Sphere<T>(points[index], eps_));
         if (next_neighbours.size() >= min_points_) {
           for (size_t neighbour : next_neighbours) {
             next.insert(neighbour);
@@ -148,6 +147,6 @@ class DBSCAN {
   }
 };
 
-} // namespace geometry
+} // namespace geometry_v2
 
 #endif // INF442_DBSCAN_H

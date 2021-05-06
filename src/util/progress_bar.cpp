@@ -7,6 +7,8 @@
 #include <cinttypes>
 #include <cstring>
 
+namespace util {
+
 ProgressBar::ProgressBar(std::ostream& out)
     : last_update_time_(std::chrono::system_clock::now())
     , average_duration_(2, 50)
@@ -153,3 +155,5 @@ ProgressBar::OutputWrapper::~OutputWrapper() {
   out_ << '\n' << replacement_;
   out_.flush();
 }
+
+} // namespace util

@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-void PrintStatistics(const char* title, Statistic& statistics) {
+void PrintStatistics(const char* title, stats::Statistic& statistics) {
   std::cout << title << ":\n";
   std::cout << "  Average: " << statistics.Mean() << "+-"
             << std::sqrt(statistics.Variance()) << '\n'
@@ -21,7 +21,7 @@ int main() {
   std::cout << "num_of_vertex = " << N << "; p = " << p
             << "; num_of_samples = " << samples << std::endl;
 
-  Stats result = EstimateStatsER(N, p, samples);
+  graph::Stats result = graph::EstimateStatsER(N, p, samples);
   PrintStatistics("Number of isolated vertices", result.isolated);
   PrintStatistics("Number of SCC", result.scc_count);
   PrintStatistics("Largest SCC", result.scc_largest);

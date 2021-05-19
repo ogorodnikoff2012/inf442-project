@@ -2,7 +2,7 @@
 // Created by Manas Uteshev on 4/28/2021.
 //
 
-#include "../graph/tarjan.h"
+#include "../graph/kosaraju.h"
 #include "../util/progress_bar.h"
 #include "../util/util.h"
 
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   std::cerr << "Reading done\nProcessing\n";
   fin.close();
 
-  auto components = graph::FindConnectedComponentsTarjan(gr, true);
+  auto components = graph::FindConnectedComponentsKosaraju(gr, true);
   std::cerr << "Processing done\nSaving\n";
 
   {

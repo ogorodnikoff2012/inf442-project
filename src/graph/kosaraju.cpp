@@ -1,4 +1,4 @@
-#include "tarjan.h"
+#include "kosaraju.h"
 #include "../util/progress_bar.h"
 #include "../util/util.h"
 
@@ -8,11 +8,11 @@
 namespace graph {
 
 std::vector<std::vector<Graph::Vertex>>
-FindConnectedComponentsTarjan(const Graph& gr, bool show_progress) {
-  class TarjanVisitor {
+FindConnectedComponentsKosaraju(const Graph& gr, bool show_progress) {
+  class KosarajuVisitor {
    public:
-    explicit TarjanVisitor(std::vector<Graph::Vertex>* component,
-                           std::shared_ptr<util::ProgressBar> bar)
+    explicit KosarajuVisitor(std::vector<Graph::Vertex>* component,
+                             std::shared_ptr<util::ProgressBar> bar)
         : component_(component)
         , bar_(std::move(bar)) {}
 
@@ -52,7 +52,7 @@ FindConnectedComponentsTarjan(const Graph& gr, bool show_progress) {
     if (visited.find(vertex) == visited.end()) {
       components.emplace_back();
       DFSHelper(transposed, visited, vertex,
-                TarjanVisitor(&components.back(), bar));
+                KosarajuVisitor(&components.back(), bar));
     }
   }
 

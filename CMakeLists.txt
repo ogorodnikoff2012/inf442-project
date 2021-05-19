@@ -24,8 +24,8 @@ set(LIBRARY_SOURCE
         src/graph/random_graph.h
         src/stats/statistics.cpp
         src/stats/statistics.h
-        src/graph/tarjan.cpp
-        src/graph/tarjan.h
+        src/graph/kosaraju.cpp
+        src/graph/kosaraju.h
         src/util/util.h
         src/geometry/point.h
         src/geometry/bounding_box.h

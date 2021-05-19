@@ -27,13 +27,28 @@ Stats EstimateStatsER(size_t n, double p, size_t samples) {
     results.scc_count.Add(components.size());
 
     unsigned int max_comp = 0;
+    int index_max = 0;
+    int loop = 0;
     for (const auto& comp : components) {
       auto comp_size = comp.size();
       if (comp_size > max_comp) {
         max_comp = comp_size;
+        index_max = loop;
       }
+      loop++;
     }
     results.scc_largest.Add(max_comp);
+
+    unsigned int second_max = 0;
+    loop = 0;
+    for (const auto& comp : components) {
+      auto comp_size = comp.size();
+      if (comp_size > second_max && loop != index_max) {
+        second_max = comp_size;
+      }
+      loop++;
+    }
+    results.scc_2largest.Add(second_max);
 
     size_t isolated = 0;
     for (Graph::Vertex vertex = 0; vertex < n; vertex++) {

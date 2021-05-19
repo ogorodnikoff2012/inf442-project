@@ -25,11 +25,9 @@ Graph GenerateER(size_t n, double p, Generator& g) {
 
 struct Stats {
   stats::Statistic isolated;
-  // double avg_iso;
   stats::Statistic scc_count;
   stats::Statistic scc_largest;
-  // double avg_scc;
-  // unsigned int max_scc;
+  stats::Statistic scc_2largest;
 } typedef Stats;
 
 Stats EstimateStatsER(size_t n, double p, size_t samples);

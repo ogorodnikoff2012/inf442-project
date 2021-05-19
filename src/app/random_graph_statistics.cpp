@@ -25,5 +25,6 @@ int main() {
   PrintStatistics("Number of isolated vertices", result.isolated);
   PrintStatistics("Number of SCC", result.scc_count);
   PrintStatistics("Largest SCC", result.scc_largest);
+  PrintStatistics("Second largest SCC", result.scc_2largest);
   return 0;
 }

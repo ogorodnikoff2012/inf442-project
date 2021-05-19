@@ -1,6 +1,6 @@
 #include "random_graph.h"
 #include "../util/progress_bar.h"
-#include "tarjan.h"
+#include "kosaraju.h"
 
 #include <iostream>
 
@@ -22,7 +22,7 @@ Stats EstimateStatsER(size_t n, double p, size_t samples) {
   for (size_t i = 0; i < samples; i++, bar.IncrementCounter()) {
     Graph res       = GenerateER(n, p, generator);
     Graph tr_res    = res.Transposed();
-    auto components = FindConnectedComponentsTarjan(res);
+    auto components = FindConnectedComponentsKosaraju(res);
 
     results.scc_count.Add(components.size());
 

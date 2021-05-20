@@ -39,11 +39,11 @@ set(LIBRARY_SOURCE
         src/geometry_v2/dbscan.h
         src/geometry_v2/dimension_mismatch_error.h
         src/geometry_v2/dimension_mismatch_error.cpp
-        )
+        src/geometry_v2/pseudo_dbscan.h)
 
 add_library(common STATIC ${LIBRARY_SOURCE})
 
-foreach (app find_connected_components random_graph_statistics demo_progress_bar demo_point dbscan demo_point_v2)
+foreach (app find_connected_components random_graph_statistics demo_progress_bar demo_point dbscan demo_point_v2 pseudo_dbscan)
     add_executable(${app} src/app/${app}.cpp)
     target_link_libraries(${app} PUBLIC common)
 endforeach ()

@@ -2,6 +2,7 @@
 .idea/
 *.in
 *.out
+*.pseudo
 .vscode/
 datasets/*.txt
 datasets/*.lbl

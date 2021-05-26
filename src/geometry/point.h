@@ -37,7 +37,6 @@ class Point {
   }
 
   bool operator==(const Point& other) const {
-#pragma unroll
     for (size_t i = 0; i < N; ++i) {
       if (data_[i] != other.data_[i]) {
         return false;
@@ -81,7 +80,6 @@ class Point {
   auto DistanceSqr(const Point<U, N>& other) const {
     using ResultType = std::common_type_t<T, U>;
     ResultType result{};
-#pragma unroll
     for (size_t i = 0; i < N; ++i) {
       auto delta = data_[i] - other[i];
       result += delta * delta;

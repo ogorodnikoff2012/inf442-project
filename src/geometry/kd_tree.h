@@ -21,7 +21,6 @@ class KDTree {
  public:
   using ValueType                         = T;
   static constexpr size_t kDimensionality = N;
-  using Point                             = Point<T, N>;
 
   template <class Iterator>
   KDTree(Iterator begin, Iterator end)
@@ -34,16 +33,16 @@ class KDTree {
   template <class Shape>
   std::vector<size_t> IndicesIn(const Shape& shape) const {
     std::vector<size_t> result;
-    ForEachIn(shape, [&](const Point& point, size_t index) {
+    ForEachIn(shape, [&](const Point<T, N>& point, size_t index) {
       result.push_back(index);
     });
     return result;
   }
 
   template <class Shape>
-  std::vector<Point> PointsIn(const Shape& shape) const {
-    std::vector<Point> result;
-    ForEachIn(shape, [&](const Point& point, size_t index) {
+  std::vector<Point<T, N>> PointsIn(const Shape& shape) const {
+    std::vector<Point<T, N>> result;
+    ForEachIn(shape, [&](const Point<T, N>& point, size_t index) {
       result.push_back(point);
     });
     return result;
@@ -51,7 +50,7 @@ class KDTree {
 
   template <class Shape, class Callback>
   void ForEachIn(const Shape& shape, Callback callback) const {
-    ForEachIn(shape.GetBoundingBox(), [&](const Point& point, size_t index) {
+    ForEachIn(shape.GetBoundingBox(), [&](const Point<T, N>& point, size_t index) {
       if (shape.Contains(point)) {
         callback(point, index);
       }
@@ -63,7 +62,7 @@ class KDTree {
     ForEachInHelper(root_, box, callback);
   }
 
-  const Point& NearestPoint(const Point& pt, size_t* index = nullptr) const {
+  const Point<T, N>& NearestPoint(const Point<T, N>& pt, size_t* index = nullptr) const {
     if (!root_) {
       throw std::runtime_error("Tree is empty");
     }
@@ -78,7 +77,7 @@ class KDTree {
     return points_[best_index];
   }
 
-  const std::vector<Point>& Points() const { return points_; }
+  const std::vector<Point<T, N>>& Points() const { return points_; }
 
  private:
   using IndexIterator = std::vector<size_t>::iterator;
@@ -104,7 +103,7 @@ class KDTree {
         , bounding_box(box) {}
   };
 
-  std::vector<Point> points_;
+  std::vector<Point<T, N>> points_;
   std::vector<size_t> indices_;
   std::unique_ptr<Node> root_{nullptr};
 
@@ -120,7 +119,7 @@ class KDTree {
     return *Middle(node->index_begin, node->index_end);
   }
 
-  void NearestPointHelper(const std::unique_ptr<Node>& node, const Point& pt,
+  void NearestPointHelper(const std::unique_ptr<Node>& node, const Point<T, N>& pt,
                           size_t* best_index, T* best_dist_sqr) const {
     if (!node) {
       return;

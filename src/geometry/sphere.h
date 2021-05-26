@@ -31,7 +31,6 @@ class Sphere {
     Point<T, N> lower = center_;
     Point<T, N> upper = center_;
 
-#pragma unroll
     for (size_t i = 0; i < N; ++i) {
       lower[i] -= radius_;
       upper[i] += radius_;

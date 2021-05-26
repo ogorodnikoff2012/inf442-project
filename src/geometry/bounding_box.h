@@ -19,7 +19,6 @@ class BoundingBox {
   static constexpr size_t kDimensionality = N;
 
   BoundingBox() {
-#pragma unroll
     for (size_t i = 0; i < N; ++i) {
       lower_[i] = std::numeric_limits<T>::max();
       upper_[i] = std::numeric_limits<T>::lowest();
@@ -47,7 +46,6 @@ class BoundingBox {
 
   template <class U>
   void Extend(const Point<U, N>& point) {
-#pragma unroll
     for (size_t i = 0; i < N; ++i) {
       lower_[i] = std::min<T>(lower_[i], point[i]);
       upper_[i] = std::max<T>(upper_[i], point[i]);
@@ -61,7 +59,6 @@ class BoundingBox {
   }
 
   bool IsEmpty() const {
-#pragma unroll
     for (size_t i = 0; i < N; ++i) {
       if (lower_[i] > upper_[i]) {
         return true;
@@ -73,7 +70,6 @@ class BoundingBox {
   operator bool() const { return !IsEmpty(); }
 
   bool Contains(const Point<T, N>& point) const {
-#pragma unroll
     for (size_t i = 0; i < N; ++i) {
       if (point[i] < lower_[i] || upper_[i] < point[i]) {
         return false;
@@ -85,7 +81,6 @@ class BoundingBox {
   BoundingBox IntersectWith(const BoundingBox& other) const {
     BoundingBox result;
 
-#pragma unroll
     for (size_t i = 0; i < N; ++i) {
       result.lower_[i] = std::max<T>(lower_[i], other.lower_[i]);
       result.upper_[i] = std::min<T>(upper_[i], other.upper_[i]);
